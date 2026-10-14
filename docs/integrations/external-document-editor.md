@@ -94,6 +94,34 @@ implicit continuity.
 - [ ] Validate the real OpenWebUI -> Explorer -> ONLYOFFICE flow before marking
       this PR ready for review.
 
+## End-state: structured document editing API
+
+The long-term target is an editor integration with capabilities similar to the
+Google Docs/Slides API model, rather than a file-transfer-only integration.
+
+The provider-neutral OpenWebUI contract should eventually support:
+
+- a stable logical document ID;
+- `get`/read state before an edit;
+- structured `batchUpdate` operations;
+- atomic application of a batch;
+- an opaque revision ID and optimistic `requiredRevisionId` precondition;
+- idempotency keys for retried model operations;
+- explicit conflict responses when a user changed the document first;
+- operation results that identify affected paragraphs, slides, tables, or objects;
+- revision/history metadata;
+- live-session status and force-save requests;
+- event delivery for collaborator changes and saves.
+
+The model should produce validated semantic operations, not arbitrary JavaScript or
+an opaque replacement file. The external editor adapter may use an ONLYOFFICE
+plugin/API internally to apply those operations to the document session that the
+user has open.
+
+For presentations, the target is analogous to the Google Slides `presentations`
+resource and its atomic `batchUpdate` model. This must remain an abstraction so
+other editor providers can implement their own document/slide operation adapter.
+
 ## Non-goals
 
 - Making ONLYOFFICE the only supported external editor.
